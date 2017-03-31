@@ -17,6 +17,21 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+
+# Visual Studio
+*.exe
+*.ilk
+*.pdb
+*.opensdf
+*.sdf
+*.sln
+*.suo
+*.obj
+*.log
+*.tlog
+*.lastbuildstate
+*.idb
+
 # =========================
 # Operating System Files
 # =========================
