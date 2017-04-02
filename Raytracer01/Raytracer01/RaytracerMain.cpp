@@ -12,6 +12,9 @@
 #include "dielectric.h"
 #include "camera.h"
 #include "movingSphere.h"
+#include "emitter.h"
+#include "constantTexture.h"
+#include "checkerTexture.h"
 
 #include <float.h>
 
@@ -22,23 +25,29 @@ using namespace std;
 float startTime = 0.0;
 float endTime = 1.0;
 
+/*
 hitable *random_scene() {
 	int n = 500;
 	hitable **list = new hitable*[n + 1];
-	list[0] = new sphere(vec3(0, -1000.0, 0), 1000, new metal(vec3(0.5, 0.5, 0.5), 0.15));
+
+	texture *checker = new checkerTexture(new constantTexture(vec3(0.2, 0.3, 0.1)), new constantTexture(vec3(0.9, 0.9, 0.9)), 10.0);
+	list[0] = new sphere(vec3(0, -500.0, 0), 500, new lambertian(checker));
 	int i = 1;
 	for (int a = -5; a < 5; a++) {
 		for (int b = -5; b < 5; b++) {
 			float choose_mat = rand(0, 1);
 			vec3 center(a + 0.9*rand(0, 1), 0.2, b + 0.9*rand(0, 1));
 			if ((center - vec3(4.0, 0.2, 0.0)).len() > 0.9) {
-				if (choose_mat < 0.33) {
-					list[i++] = new movingSphere(center, center + vec3(rand(-0.1, 0.1), 0.0, rand(-0.1, 0.1)), startTime, endTime, 0.2, new lambertian(vec3(rand(0, 1), rand(0, 1), rand(0, 1))));
+				if (choose_mat < 0.05) {
+					list[i++] = new sphere(center, 0.2,
+						new lambertian(vec3(rand(0, 1), rand(0, 1), rand(0, 1)))
+						);
 				}
-				else if (choose_mat < 0.66) {
-					list[i++] = new sphere(center, 0.2, new metal(vec3(rand(0, 1), rand(0, 1), rand(0, 1)), rand(0.15, 0.5)));				}
+				else if (choose_mat < 0.5) {
+					list[i++] = new sphere(center, 0.2, new metal(vec3(rand(0, 1), rand(0, 1), rand(0, 1)), 0.05));
+				}
 				else {
-					list[i++] = new movingSphere(center, center + vec3(rand(-0.1, 0.1), 0.0, rand(-0.1, 0.1)), startTime, endTime, 0.2, new dielectric(1.5));
+					list[i++] = new sphere(center, 0.2, new dielectric(1.5));
 				}
 			}
 		}
@@ -46,29 +55,48 @@ hitable *random_scene() {
 	list[i++] = new sphere(vec3(0, 1, 0), 1.0, new dielectric(2.5));
 	list[i++] = new sphere(vec3(0, 1, 0), -0.98, new dielectric(2.5));
 
-	list[i++] = new sphere(vec3(-4, 1, 0), 1.0, new lambertian(vec3(1, 1, 1)));	
-	list[i++] = new sphere(vec3(4, 1, 0), 1.0, new metal(vec3(1,1,0), 0.2));
+	list[i++] = new sphere(vec3(-4, 1, 0), 1.0, new metal(vec3(1, 1, 0),0.1));	
+	list[i++] = new sphere(vec3(3, 0.5, 0), 0.5, new emitter(vec3(1,1,1)));
 
 	return new hitable_list(list, i);
+}
+*/
+
+hitable *simple_light() {
+	
+	hitable **list = new hitable*[4];
+	list[0] = new sphere(vec3(0, -1000, 0), 1000, new lambertian(
+		new checkerTexture(
+		new constantTexture(vec3(0, 1, 1.0)), new constantTexture(vec3(1, 1, 0)), 5.0)
+		));
+	list[1] = new sphere(vec3(0, 2, 0), 2, new lambertian(
+		new checkerTexture(
+		new constantTexture(vec3(0, 0.5, 1.0)), new constantTexture(vec3(1, 0.5, 0)), 5.0)
+		));
+	list[2] = new sphere(vec3(4, 4, 0), 2, new emitter(vec3(10, 10, 10)));
+	return new hitable_list(list, 3);
 }
 
 vec3 color(const ray& r, hitable *world, int depth) {
 	hit_record rec;
-	vec3 ambientColor(0.5, 0.5, 1.0);
+	vec3 ambientColor(0.0, 0.1, 0.1);
 	if (world->hit(r, 0.001, FLT_MAX, rec)) {
 		ray scattered;
-		vec3 attenuation;
+		vec3 attenuation(0, 0, 0);
 		if (depth < ScatterDepthLImit && rec.mat_ptr->scatter(r, rec, attenuation, scattered)) {
 			return attenuation * color(scattered, world, depth + 1);
 		}
 		else {
-			return ambientColor;
+			return attenuation;
 		}		
 	}
 	else {
+		return ambientColor;
+		/*
 		vec3 unit_direction = r.direction().getNormalized();
 		float t = 0.5 * (unit_direction.y + 1.0);
-		return (1.0 - t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 1.0);
+		return (1.0 - t)*vec3(1.0,1.0,1.0) + t*ambientColor;
+		*/
 	}
 }
 
@@ -76,19 +104,19 @@ int main() {
 
 	ofstream imageFile;
 	imageFile.open("image.ppm");
-	int nx = 200;
-	int ny = 200;
-	int nsample = 100;
+	int nx = 600;
+	int ny = 400;
+	int nsample = 1000;
 	imageFile << "P3\n" << nx << " " << ny << "\n255\n";
 	vec3 lower_left_corner(-3.0, -2.0, -1.0);
 	vec3 horizontal(6.0, 0.0, 0.0);
 	vec3 vertical(0.0, 4.0, 0.0);
 	vec3 origin(0.0, 0.0, 0.0);
+	
+	hitable *world = simple_light();
 
-	hitable *world = random_scene();
 
-
-	vec3 eye(5, 1.3, -2);
+	vec3 eye(-8.5, 6.3, 8.5);
 	vec3 at(0, 0, 0);
 	vec3 up(0, 1, 0);
 	float aperture = 0.0;
@@ -107,10 +135,15 @@ int main() {
 				col = col + color(r, world, 0);
 			}
 			col = col / nsample;
-			col = vec3(sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
-			int ir = int(255.99*col[0]);
-			int ig = int(255.99*col[1]);
-			int ib = int(255.99*col[2]);
+			float r = sqrt(col[0]);
+			float g = sqrt(col[1]);
+			float b = sqrt(col[2]);
+			r = r > 1.0 ? 1.0 : r;
+			g = g > 1.0 ? 1.0 : g;
+			b = b > 1.0 ? 1.0 : b;
+			int ir = int(255.99*r);
+			int ig = int(255.99*g);
+			int ib = int(255.99*b);
 
 			imageFile << ir << " " << ig << " " << ib << "\n";			
 			percentage++;

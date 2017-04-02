@@ -15,7 +15,7 @@ public:
 		vec3 reflected = reflect(r_in.direction().getNormalized(), rec.normal);
 		scattered = ray(rec.p, rec.p + reflected + fuzz*random_in_unit_sphere(), r_in.time());
 		attenuation = albedo;
-		return (dot(scattered.direction(), rec.normal) > 0);		
+		return (dot(scattered.direction(), rec.normal) > -0.01);		
 	}
 };
 #endif

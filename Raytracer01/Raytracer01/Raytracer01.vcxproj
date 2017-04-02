@@ -89,7 +89,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="checkerTexture.h" />
+    <ClInclude Include="constantTexture.h" />
     <ClInclude Include="dielectric.h" />
+    <ClInclude Include="emitter.h" />
     <ClInclude Include="hitable.h" />
     <ClInclude Include="hitable_list.h" />
     <ClInclude Include="lambertian.h" />
@@ -99,6 +102,7 @@
     <ClInclude Include="ray.h" />
     <ClInclude Include="simpleOperations.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="texture.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
