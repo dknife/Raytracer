@@ -83,8 +83,10 @@
     <ClCompile Include="movingSphere.cpp" />
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="RaytracerMain.cpp" />
+    <ClCompile Include="rect.cpp" />
     <ClCompile Include="simpleOperations.cpp" />
     <ClCompile Include="sphere.cpp" />
+    <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -95,13 +97,19 @@
     <ClInclude Include="emitter.h" />
     <ClInclude Include="hitable.h" />
     <ClInclude Include="hitable_list.h" />
+    <ClInclude Include="imageTexture.h" />
     <ClInclude Include="lambertian.h" />
+    <ClInclude Include="marbleTexture.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="metal.h" />
     <ClInclude Include="movingSphere.h" />
+    <ClInclude Include="noiseTexture.h" />
+    <ClInclude Include="perlin.h" />
     <ClInclude Include="ray.h" />
+    <ClInclude Include="rect.h" />
     <ClInclude Include="simpleOperations.h" />
     <ClInclude Include="sphere.h" />
+    <ClInclude Include="stb_image.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>

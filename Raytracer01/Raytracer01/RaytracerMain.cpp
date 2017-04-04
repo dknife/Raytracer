@@ -15,9 +15,14 @@
 #include "emitter.h"
 #include "constantTexture.h"
 #include "checkerTexture.h"
-
+#include "noiseTexture.h"
+#include "marbleTexture.h"
+#include "rect.h"
+#include "imageTexture.h"
 #include <float.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 using namespace std;
 
@@ -65,21 +70,20 @@ hitable *random_scene() {
 hitable *simple_light() {
 	
 	hitable **list = new hitable*[4];
-	list[0] = new sphere(vec3(0, -1000, 0), 1000, new lambertian(
-		new checkerTexture(
-		new constantTexture(vec3(0, 1, 1.0)), new constantTexture(vec3(1, 1, 0)), 5.0)
-		));
-	list[1] = new sphere(vec3(0, 2, 0), 2, new lambertian(
-		new checkerTexture(
-		new constantTexture(vec3(0, 0.5, 1.0)), new constantTexture(vec3(1, 0.5, 0)), 5.0)
-		));
-	list[2] = new sphere(vec3(4, 4, 0), 2, new emitter(vec3(10, 10, 10)));
-	return new hitable_list(list, 3);
+	int nx, ny, nn;
+	unsigned char *image = stbi_load("texture.jpg", &nx, &ny, &nn, 0);
+	
+	list[0] = new sphere(vec3(0, -1000, 0), 1000, new lambertian(new marbleTexture(vec3(1.0,0.0,0.0), 2.0)));
+	list[1] = new sphere(vec3(0, 2, 0), 2, new lambertian(new noiseTexture(vec3(1.0, 1.0, 0.5), 2.0)));
+	list[2] = new xy_rect(-3, 3, 0, 6, -4, new lambertian(new imageTexture(image, nx, ny)));
+	list[3] = new sphere(vec3(6, 2, 3), 4, new lambertian(new marbleTexture(vec3(1.0, 0.0, 0.0), 2.0)));
+		
+	return new hitable_list(list, 4);
 }
 
 vec3 color(const ray& r, hitable *world, int depth) {
 	hit_record rec;
-	vec3 ambientColor(0.0, 0.1, 0.1);
+	vec3 ambientColor(0.7, 0.7, 1.0);
 	if (world->hit(r, 0.001, FLT_MAX, rec)) {
 		ray scattered;
 		vec3 attenuation(0, 0, 0);
@@ -106,7 +110,7 @@ int main() {
 	imageFile.open("image.ppm");
 	int nx = 600;
 	int ny = 400;
-	int nsample = 1000;
+	int nsample = 500;
 	imageFile << "P3\n" << nx << " " << ny << "\n255\n";
 	vec3 lower_left_corner(-3.0, -2.0, -1.0);
 	vec3 horizontal(6.0, 0.0, 0.0);
@@ -121,6 +125,7 @@ int main() {
 	vec3 up(0, 1, 0);
 	float aperture = 0.0;
 	float focus_distance = (at-eye).len();
+	float gamma=1.5;
 	camera cam(eye,at,up, 45, float(nx) / float(ny), aperture, focus_distance, startTime, endTime);
 	int percentage = 1;
 	for (int j = ny - 1; j >= 0; j--) {
@@ -135,12 +140,19 @@ int main() {
 				col = col + color(r, world, 0);
 			}
 			col = col / nsample;
-			float r = sqrt(col[0]);
-			float g = sqrt(col[1]);
-			float b = sqrt(col[2]);
-			r = r > 1.0 ? 1.0 : r;
-			g = g > 1.0 ? 1.0 : g;
-			b = b > 1.0 ? 1.0 : b;
+			float lenSqr = col.lenSquare();
+			if (lenSqr>1.0) {
+				float total = 1.0 + lenSqr;
+				float t = lenSqr / total;
+				col = col.getNormalized()*(1-t) + vec3(1, 1, 1)*t;
+			}
+
+			float r = pow(col[0], 1.0/gamma);
+			float g = pow(col[1], 1.0 / gamma);
+			float b = pow(col[2], 1.0 / gamma);
+			//r = r > 1.0 ? 1.0 : r;
+			//g = g > 1.0 ? 1.0 : g;
+			//b = b > 1.0 ? 1.0 : b;
 			int ir = int(255.99*r);
 			int ig = int(255.99*g);
 			int ib = int(255.99*b);
