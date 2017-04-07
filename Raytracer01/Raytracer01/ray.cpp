@@ -1,11 +1,11 @@
 #include "ray.h"
 
-ray::ray() {
+ray::ray() : fromEye(false) {
 	A.set(0, 0, 0);
 	B.set(0, 0, -1);
 }
 
-ray::ray(const vec3& a, const vec3& b, float timeValue) {
+ray::ray(const vec3& a, const vec3& b, float timeValue) : fromEye(false) {
 	A = a;
 	B = b;
 	_time = timeValue;

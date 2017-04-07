@@ -19,9 +19,16 @@ public:
 	
 	virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
 		vec3 reflected = reflect(r_in.direction().getNormalized(), rec.normal);
-		scattered = ray(rec.p, rec.p + reflected + fuzz*random_in_unit_sphere(), r_in.time());
-		attenuation = albedo->value(0,0,rec.p);
-		return (dot(scattered.direction(), rec.normal) > -0.01);		
+		scattered = ray(rec.p, rec.p + reflected + fuzz*random_in_unit_sphere(), r_in.time());		
+		if (dot(scattered.direction(), rec.normal) > -0.01) {
+			attenuation = albedo->value(rec.u, rec.v, rec.p);
+			return true;			
+		}
+		else {
+			attenuation = vec3(0, 0, 0);
+			return false;
+		}
+
 	}
 };
 #endif

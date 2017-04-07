@@ -94,6 +94,7 @@
     <ClInclude Include="checkerTexture.h" />
     <ClInclude Include="constantTexture.h" />
     <ClInclude Include="dielectric.h" />
+    <ClInclude Include="dielectricSpectral.h" />
     <ClInclude Include="emitter.h" />
     <ClInclude Include="hitable.h" />
     <ClInclude Include="hitable_list.h" />
