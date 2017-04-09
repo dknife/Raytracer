@@ -25,7 +25,7 @@ public:
 
 		float rValue = rand(0, 1);
 		if (rValue<0.33) { // r path
-			r_idx = ref_idx*0.9;
+			r_idx = ref_idx*0.95;
 			attenuation = vec3(2.0, 0.5, 0.5);
 		}
 		else if (rValue<0.66) { // g path
@@ -33,7 +33,7 @@ public:
 			attenuation = vec3(0.5, 2.0, 0.5);
 		}
 		else { // b path
-			r_idx = ref_idx*1.1;
+			r_idx = ref_idx*1.05;
 			attenuation = vec3(0.5, 0.5, 2.0);
 		}
 

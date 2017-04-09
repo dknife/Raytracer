@@ -14,7 +14,7 @@
 #include "movingSphere.h"
 #include "emitter.h"
 #include "constantTexture.h"
-#include "checkerTexture.h"
+#include "checkerTextureUV.h"
 #include "noiseTexture.h"
 #include "marbleTexture.h"
 #include "rect.h"
@@ -68,23 +68,29 @@ hitable *random_scene() {
 }
 
 hitable *cornell_box() {
-	hitable **list = new hitable*[7];
+	hitable **list = new hitable*[20];
 
 	int i = 0;
 
 	material *red = new lambertian(vec3(0.65, 0.05, 0.05));
+	material *redChecker = new lambertian(new checkerTextureUV(new constantTexture(vec3(1, 1, 1)), new constantTexture(vec3(0.65, 0.05, 0.05)), 50.0));
 	material *white = new lambertian(vec3(0.73, 0.73, 0.73));
+	material *checker = new lambertian(new checkerTextureUV(new constantTexture(vec3(1, 1, 1)), new constantTexture(vec3(0,0,0)), 50.0));
 	material *green = new lambertian(vec3(0.12, 0.45, 0.15));
-	material *light = new emitter(vec3(15, 15, 15));
+	material *greenChecker = new lambertian(new checkerTextureUV(new constantTexture(vec3(1, 1, 1)), new constantTexture(vec3(0.12, 0.45, 0.15)), 50.0));
 
-	list[i++] = new yz_rect(0, 555, 0, 555, 555, green); ((yz_rect*) list[i - 1])->flip();
-	list[i++] = new yz_rect(0, 555, 0, 555, 0, red);
-	list[i++] = new xz_rect(213, 343, 227, 332, 554, light);
+	material *light = new emitter(vec3(15, 15, 15));
+	
+	list[i++] = new yz_rect(0, 555, 0, 555, 555, greenChecker); ((yz_rect*) list[i - 1])->flip();
+	list[i++] = new yz_rect(0, 555, 0, 555, 0, redChecker);
+	list[i++] = new xz_rect(213, 343, 227, 332, 554, light); // original light
+	list[i++] = new xz_rect(50, 100, 227, 332, 554, light);
+	list[i++] = new xz_rect(450, 505, 227, 332, 554, light);
 	list[i++] = new xz_rect(0, 555, 0, 555, 555, white); ((xz_rect*) list[i - 1])->flip();
 	list[i++] = new xz_rect(0, 555, 0, 555, 0, white);
-	list[i++] = new xy_rect(0, 555, 0, 555, 555, white); ((xy_rect*)list[i - 1])->flip();
-	list[i++] = new sphere(vec3(300, 250, 150), 80, new dielectricSpectral(1.25));
-	list[i++] = new sphere(vec3(400, 80, 150), 80, new dielectricSpectral(1.25));
+	list[i++] = new xy_rect(0, 555, 0, 555, 555, checker); ((xy_rect*)list[i - 1])->flip();
+	list[i++] = new sphere(vec3(300, 250, 150), 80, new dielectricSpectral(1.5));
+	list[i++] = new sphere(vec3(400, 80, 150), 80, new dielectricSpectral(1.5));
 	list[i++] = new sphere(vec3(200, 80, 150), 80, new lambertian(vec3(1.0, 1.0, 1.0)));
 	//list[i++] = new sphere(vec3(6, 2, 3), 4, new lambertian(new marbleTexture(vec3(1.0, 1.0, 1.0), 2.0)));
 
@@ -117,7 +123,7 @@ hitable *simple_light() {
 
 vec3 color(const ray& r, hitable *world, int depth) {
 	hit_record rec;
-	vec3 ambientColor(0.1, 0.1, 0.2);
+	vec3 ambientColor(0,0,0);
 	if (world->hit(r, 0.001, FLT_MAX, rec)) {
 		ray scattered;
 		vec3 attenuation(0, 0, 0);
@@ -144,7 +150,7 @@ int main() {
 	imageFile.open("image.ppm");
 	int nx = 600;
 	int ny = 400;
-	int nsample = 10000;
+	int nsample = 20000;
 	imageFile << "P3\n" << nx << " " << ny << "\n255\n";
 	vec3 lower_left_corner(-3.0, -2.0, -1.0);
 	vec3 horizontal(6.0, 0.0, 0.0);

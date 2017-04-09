@@ -92,6 +92,7 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="checkerTexture.h" />
+    <ClInclude Include="checkerTextureUV.h" />
     <ClInclude Include="constantTexture.h" />
     <ClInclude Include="dielectric.h" />
     <ClInclude Include="dielectricSpectral.h" />
