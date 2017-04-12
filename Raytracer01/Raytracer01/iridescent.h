@@ -23,20 +23,20 @@ public:
 		vec3 ray_normal = dot(rayOriginal, rec.normal)*rec.normal;
 		vec3 ray_tangent = rayOriginal - ray_normal;
 		vec3 normal;
-		float alpha = 0.1;
+		float alpha = 0.05;
 		float rValue = rand(0, 1);
 		if (rValue<0.33) { // r path
 			attenuation = vec3(2.0, 0.5, 0.5)*albedo->value(rec.u, rec.v, rec.p);
-			normal = rec.normal + alpha*ray_tangent;		
+			normal = rec.normal;		
 			normal.normalize();
 		}
 		else if (rValue<0.66) { // g path
 			attenuation = vec3(0.5, 2.0, 0.5)*albedo->value(rec.u, rec.v, rec.p);;
-			normal = rec.normal;
+			normal = rec.normal - alpha*ray_tangent;
 		}
 		else { // b path
 			attenuation = vec3(0.5, 0.5, 2.0)*albedo->value(rec.u, rec.v, rec.p);
-			normal = rec.normal - alpha*ray_tangent;
+			normal = rec.normal - 2.0*alpha*ray_tangent;
 			normal.normalize();
 		}
 
@@ -44,7 +44,7 @@ public:
 		scattered = ray(rec.p, rec.p + reflected + fuzz*random_in_unit_sphere(), r_in.time());	
 
 
-		if (dot(scattered.direction(),normal) > -0.01) {
+		if (dot(scattered.direction(),rec.normal) > -0.01) {
 			return true;			
 		}
 		else {

@@ -90,6 +90,7 @@
     <ClCompile Include="vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="box.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="checkerTexture.h" />
     <ClInclude Include="checkerTextureUV.h" />
@@ -97,9 +98,11 @@
     <ClInclude Include="dielectric.h" />
     <ClInclude Include="dielectricSpectral.h" />
     <ClInclude Include="emitter.h" />
+    <ClInclude Include="flipNormal.h" />
     <ClInclude Include="hitable.h" />
     <ClInclude Include="hitable_list.h" />
     <ClInclude Include="imageTexture.h" />
+    <ClInclude Include="iridescent.h" />
     <ClInclude Include="lambertian.h" />
     <ClInclude Include="marbleTexture.h" />
     <ClInclude Include="material.h" />
