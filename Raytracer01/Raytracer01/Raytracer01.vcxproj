@@ -90,6 +90,7 @@
     <ClCompile Include="vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="aabb.h" />
     <ClInclude Include="box.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="checkerTexture.h" />

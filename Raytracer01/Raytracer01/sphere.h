@@ -3,6 +3,7 @@
 
 #include "hitable.h"
 #include "material.h"
+#include "aabb.h"
 
 class sphere : public hitable {
 public:
@@ -13,6 +14,6 @@ public:
 	sphere() {}
 	sphere(vec3 c, float r, material* mPtr) : center(c), radius(r), mat_ptr(mPtr) {};
 	virtual bool hit(const ray& r, float t_min, float t_max, hit_record& rec) const;
-	
+	virtual bool boundingBox(float t0, float t1, aabb& box) const;
 };
 #endif

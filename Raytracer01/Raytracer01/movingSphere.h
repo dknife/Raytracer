@@ -12,6 +12,8 @@ public:
 	movingSphere(vec3 cen0, vec3 cen1, float t0, float t1, float r, material *m) : sphere(cen0, r, m), target(cen1), time0(t0), time1(t1) { };
 
 	virtual bool hit(const ray& r, float tmin, float tmax, hit_record& rec) const;
+	virtual bool boundingBox(float t0, float t1, aabb& box) const;
+
 	vec3 loc(float time) const;
 
 };

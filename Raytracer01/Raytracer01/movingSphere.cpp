@@ -1,6 +1,6 @@
 
 #include "movingSphere.h"
-
+#include "aabb.h"
 
 
 bool movingSphere::hit(const ray& r, float tmin, float tmax, hit_record& rec) const {
@@ -36,3 +36,10 @@ vec3 movingSphere::loc(float time) const {
 	return (1.0 - t) * center + t * target;
 
 };
+
+bool movingSphere::boundingBox(float t0, float t1, aabb& box) const {
+	aabb aabb1 = aabb(center - vec3(radius, radius, radius), center + vec3(radius, radius, radius));
+	aabb aabb2 = aabb(target - vec3(radius, radius, radius), target + vec3(radius, radius, radius));
+	box = surroundingBox(aabb1, aabb2);
+	return true;
+}

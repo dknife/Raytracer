@@ -184,7 +184,7 @@ hitable *final() {
 	int l = 0;
 	
 	list[l++] = new hitable_list(boxlist, b);
-	material *light = new emitter(vec3(7, 7, 7));
+	material *light = new emitter(vec3(17, 17, 17));
 	list[l++] = new xz_rect(123, 423, 147, 412, 554, light);
 
 	return new hitable_list(list, l);
@@ -192,7 +192,7 @@ hitable *final() {
 
 vec3 color(const ray& r, hitable *world, int depth) {
 	hit_record rec;
-	vec3 ambientColor(0,0,0);
+	vec3 ambientColor(0.5,0.6,0.8);
 	if (world->hit(r, 0.001, FLT_MAX, rec)) {
 		ray scattered;
 		vec3 attenuation(0, 0, 0);
@@ -204,12 +204,12 @@ vec3 color(const ray& r, hitable *world, int depth) {
 		}
 	}
 	else {
-		return ambientColor;
-		/*
+		//return ambientColor;
+	
 		vec3 unit_direction = r.direction().getNormalized();
 		float t = 0.5 * (unit_direction.y + 1.0);
 		return (1.0 - t)*vec3(1.0,1.0,1.0) + t*ambientColor;
-		*/
+		
 	}
 }
 
@@ -219,7 +219,7 @@ int main() {
 	imageFile.open("image.ppm");
 	int nx = 600;
 	int ny = 400;
-	int nsample = 50;
+	int nsample = 200;
 	imageFile << "P3\n" << nx << " " << ny << "\n255\n";
 	vec3 lower_left_corner(-3.0, -2.0, -1.0);
 	vec3 horizontal(6.0, 0.0, 0.0);
