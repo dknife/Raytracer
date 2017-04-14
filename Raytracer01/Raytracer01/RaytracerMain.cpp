@@ -177,7 +177,7 @@ hitable *final() {
 	material *iri = new iridescent(vec3(0.8, 0.8, 1.0), 0.5);
 	material *dielecSpect = new dielectricSpectral(1.5);
 	material *dielec = new dielectric(1.5);
-	material *gold = new metal(vec3(1, 1, 0.6), 0.1);
+	material *gold = new metal(vec3(1, 1, 0.6), 0.3);
 	
 	int b = 0;
 	for (int i = 0; i < nb; i++) {
@@ -208,8 +208,8 @@ hitable *final() {
 	list[l++] = new sphere(vec3(600, 200, -500), 120, green);
 	list[l++] = new sphere(vec3(350, 200, -505), 120, gold);
 
-	list[l++] = new sphere(vec3(0, 200, -300), 120, dielecSpect);
-	list[l++] = new sphere(vec3(0, 200, -300), 110, iri);
+	list[l++] = new sphere(vec3(0, 200, -1000), 110, dielecSpect);
+	list[l++] = new sphere(vec3(0, 200, -1000), 100, iri);
 	
 	list[l++] = new sphere(vec3(150, 200, -605), 124, dielecSpect);
 
@@ -250,9 +250,9 @@ int main() {
 
 	ofstream imageFile;
 	imageFile.open("image.ppm");
-	int nx = 300;
-	int ny = 200;
-	int nsample = 500;
+	int nx = 600;
+	int ny = 400;
+	int nsample = 15000;
 	imageFile << "P3\n" << nx << " " << ny << "\n255\n";
 	vec3 lower_left_corner(-3.0, -2.0, -1.0);
 	vec3 horizontal(6.0, 0.0, 0.0);
