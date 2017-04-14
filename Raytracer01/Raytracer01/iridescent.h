@@ -27,16 +27,16 @@ public:
 		float rValue = rand(0, 1);
 		if (rValue<0.33) { // r path
 			attenuation = vec3(2.0, 0.5, 0.5)*albedo->value(rec.u, rec.v, rec.p);
-			normal = rec.normal;		
+			normal = rec.normal + alpha*ray_tangent;
 			normal.normalize();
 		}
 		else if (rValue<0.66) { // g path
 			attenuation = vec3(0.5, 2.0, 0.5)*albedo->value(rec.u, rec.v, rec.p);;
-			normal = rec.normal - alpha*ray_tangent;
+			normal = rec.normal;
 		}
 		else { // b path
 			attenuation = vec3(0.5, 0.5, 2.0)*albedo->value(rec.u, rec.v, rec.p);
-			normal = rec.normal - 2.0*alpha*ray_tangent;
+			normal = rec.normal - alpha*ray_tangent;
 			normal.normalize();
 		}
 

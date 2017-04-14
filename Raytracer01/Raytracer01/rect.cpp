@@ -19,6 +19,11 @@ bool xy_rect::hit(const ray& r, float t0, float t1, hit_record& rec) const {
 	return true;
 }
 
+bool xy_rect::boundingBox(float t0, float t1, aabb& box) const {
+	box = aabb(vec3(x0, y0, k - 0.0001), vec3(x1, y1, k + 0.0001));
+	return true;
+}
+
 bool xz_rect::hit(const ray& r, float t0, float t1, hit_record& rec) const {
 	float t = (k - r.source().y) / r.direction().y;
 	if (t<t0 || t>t1) return false;
@@ -34,6 +39,11 @@ bool xz_rect::hit(const ray& r, float t0, float t1, hit_record& rec) const {
 	rec.mat_ptr = mp;
 	rec.p = r.point_at_parameter(rec.t);
 	rec.normal = flipNormal ? vec3(0, -1, 0) : vec3(0, 1, 0);
+	return true;
+}
+
+bool xz_rect::boundingBox(float t0, float t1, aabb& box) const {
+	box = aabb(vec3(x0, k - 0.0001, z0), vec3(x1, k + 0.0001, z1));
 	return true;
 }
 
@@ -55,3 +65,7 @@ bool yz_rect::hit(const ray& r, float t0, float t1, hit_record& rec) const {
 	return true;
 }
 
+bool yz_rect::boundingBox(float t0, float t1, aabb& box) const {
+	box = aabb(vec3(k - 0.0001, y0, z0), vec3(k + 0.0001, y1, z1));
+	return true;
+}

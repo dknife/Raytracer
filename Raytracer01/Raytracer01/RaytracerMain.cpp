@@ -23,6 +23,7 @@
 #include "dielectric.h"
 #include "iridescent.h"
 #include "box.h"
+#include "boundingHierarchy.h"
 
 #include <float.h>
 
@@ -168,10 +169,20 @@ hitable *final() {
 
 	material *white = new lambertian(new constantTexture(vec3(0.73, 0.73, 0.73)));
 	material *ground = new lambertian(new constantTexture(vec3(0.48, 0.83, 0.53)));
+	material *red = new lambertian(vec3(0.65, 0.05, 0.05));
+	material *redChecker = new lambertian(new checkerTextureUV(new constantTexture(vec3(1, 1, 1)), new constantTexture(vec3(0.65, 0.05, 0.05)), 50.0));
+	material *checker = new lambertian(new checkerTextureUV(new constantTexture(vec3(1, 1, 1)), new constantTexture(vec3(0, 0, 0)), 50.0));
+	material *green = new lambertian(vec3(0.12, 0.45, 0.15));
+	material *greenChecker = new lambertian(new checkerTextureUV(new constantTexture(vec3(1, 1, 1)), new constantTexture(vec3(0.12, 0.45, 0.15)), 50.0));
+	material *iri = new iridescent(vec3(0.8, 0.8, 1.0), 0.5);
+	material *dielecSpect = new dielectricSpectral(1.5);
+	material *dielec = new dielectric(1.5);
+	material *gold = new metal(vec3(1, 1, 0.6), 0.1);
+	
 	int b = 0;
 	for (int i = 0; i < nb; i++) {
 		for (int j = 0; j < nb; j++) {
-			float w = 100;
+			float w = 2000 / nb;;
 			float x0 = -1000 + i*w;
 			float z0 = -1000 + j*w;
 			float y0 = 0;
@@ -181,18 +192,39 @@ hitable *final() {
 			boxlist[b++] = new box(vec3(x0, y0, z0), vec3(x1, y1, z1), ground);
 		}
 	}
+
 	int l = 0;
-	
-	list[l++] = new hitable_list(boxlist, b);
+	list[l++] = new boundingHierarchy(boxlist, b, 0, 1);
 	material *light = new emitter(vec3(17, 17, 17));
+
 	list[l++] = new xz_rect(123, 423, 147, 412, 554, light);
+	list[l++] = new xz_rect(-300, 0, 147, 412, 554, light);
+	list[l++] = new xz_rect(123, 423, -412, -147, 554, light);
+	list[l++] = new xz_rect(-300, 0, -412, -147, 554, light);
+	vec3 center(400, 300, 200);
+	list[l++] = new movingSphere(center, center + vec3(30, 0, 0), 0, 1, 150, new lambertian(vec3(0.7, 0.3, 0.1)));
+
+	list[l++] = new sphere(vec3(600, 200, -500), 124, dielec);
+	list[l++] = new sphere(vec3(600, 200, -500), 120, green);
+	list[l++] = new sphere(vec3(350, 200, -505), 120, gold);
+
+	list[l++] = new sphere(vec3(0, 200, -300), 120, dielecSpect);
+	list[l++] = new sphere(vec3(0, 200, -300), 110, iri);
+	
+	list[l++] = new sphere(vec3(150, 200, -605), 124, dielecSpect);
+
+	list[l++] = new sphere(vec3(-400, 200, -300), 124, dielec);
+
+	list[l++] = new sphere(vec3(-423, 300, 100), 250, new lambertian(new noiseTexture(vec3(1.0, 1.0, 1.0), 1/50.0)));
+	
+	
 
 	return new hitable_list(list, l);
 }
 
 vec3 color(const ray& r, hitable *world, int depth) {
 	hit_record rec;
-	vec3 ambientColor(0.5,0.6,0.8);
+	vec3 ambientColor(0.2,0.2,0.2);
 	if (world->hit(r, 0.001, FLT_MAX, rec)) {
 		ray scattered;
 		vec3 attenuation(0, 0, 0);
@@ -204,11 +236,12 @@ vec3 color(const ray& r, hitable *world, int depth) {
 		}
 	}
 	else {
-		//return ambientColor;
-	
+		return ambientColor;
+		/*
 		vec3 unit_direction = r.direction().getNormalized();
 		float t = 0.5 * (unit_direction.y + 1.0);
 		return (1.0 - t)*vec3(1.0,1.0,1.0) + t*ambientColor;
+		*/
 		
 	}
 }
@@ -217,9 +250,9 @@ int main() {
 
 	ofstream imageFile;
 	imageFile.open("image.ppm");
-	int nx = 600;
-	int ny = 400;
-	int nsample = 200;
+	int nx = 300;
+	int ny = 200;
+	int nsample = 500;
 	imageFile << "P3\n" << nx << " " << ny << "\n255\n";
 	vec3 lower_left_corner(-3.0, -2.0, -1.0);
 	vec3 horizontal(6.0, 0.0, 0.0);

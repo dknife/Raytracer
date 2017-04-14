@@ -78,6 +78,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aabb.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="hitable_list.cpp" />
     <ClCompile Include="movingSphere.cpp" />
@@ -91,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aabb.h" />
+    <ClInclude Include="boundingHierarchy.h" />
     <ClInclude Include="box.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="checkerTexture.h" />

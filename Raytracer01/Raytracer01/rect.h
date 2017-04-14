@@ -16,6 +16,7 @@ public:
 
 	void flip(void) { flipNormal = flipNormal ? false : true; }
 	virtual bool hit(const ray& r, float t0, float t1, hit_record& rec) const;
+	virtual bool boundingBox(float t0, float t1, aabb& box) const;
 
 };
 
@@ -31,6 +32,7 @@ public:
 
 	void flip(void) { flipNormal = flipNormal ? false : true; }
 	virtual bool hit(const ray& r, float t0, float t1, hit_record& rec) const;
+	virtual bool boundingBox(float t0, float t1, aabb& box) const;
 
 };
 
@@ -46,6 +48,7 @@ public:
 
 	void flip(void) { flipNormal = flipNormal ? false : true; }
 	virtual bool hit(const ray& r, float t0, float t1, hit_record& rec) const;
+	virtual bool boundingBox(float t0, float t1, aabb& box) const;
 
 };
 

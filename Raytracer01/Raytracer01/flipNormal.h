@@ -15,6 +15,10 @@ public:
 		}
 		else return false;
 	}
+
+	virtual bool boundingBox(float t0, float t1, aabb& box) const {
+		return hitableObj->boundingBox(t0, t1, box);		
+	}
 };
 
 #endif
