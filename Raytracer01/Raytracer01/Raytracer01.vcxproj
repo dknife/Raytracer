@@ -79,12 +79,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="aabb.cpp" />
+    <ClCompile Include="boundingHierarchy.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="hitable_list.cpp" />
     <ClCompile Include="movingSphere.cpp" />
+    <ClCompile Include="perlin.cpp" />
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="RaytracerMain.cpp" />
     <ClCompile Include="rect.cpp" />
+    <ClCompile Include="scenes.cpp" />
     <ClCompile Include="simpleOperations.cpp" />
     <ClCompile Include="sphere.cpp" />
     <ClCompile Include="stb_image.cpp" />
@@ -115,6 +118,7 @@
     <ClInclude Include="perlin.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="rect.h" />
+    <ClInclude Include="scenes.h" />
     <ClInclude Include="simpleOperations.h" />
     <ClInclude Include="sphere.h" />
     <ClInclude Include="stb_image.h" />

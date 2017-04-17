@@ -1,46 +1,14 @@
 #ifndef _BOUNDINGVOLUMEHIERARCHY_YMKANG
 #define _BOUNDINGVOLUMEHIERARCHY_YMKANG
 
+#include "simpleOperations.h"
 #include "hitable.h"
 #include "hitable_list.h"
 #include "aabb.h"
 
-int box_x_compare(const void *a, const void *b) {
-	
-	aabb aabb1, aabb2;
-	hitable * box1 = *((hitable **)a);
-	hitable * box2 = *((hitable **)b);
-	
-	if (!box1->boundingBox(0, 0, aabb1) || !box2->boundingBox(0, 0, aabb2)) {
-		std::cerr << "no bounding box in bvh nodes";
-	}
-
-	return (aabb1.min().x > aabb2.min().x) ? 1 : -1;
-}
-
-int box_y_compare(const void *a, const void *b) {
-	aabb aabb1, aabb2;
-	hitable * box1 = *((hitable **)a);
-	hitable * box2 = *((hitable **)b);
-
-	if (!box1->boundingBox(0, 0, aabb1) || !box2->boundingBox(0, 0, aabb2)) {
-		std::cerr << "no bounding box in bvh nodes";
-	}
-
-	return (aabb1.min().y > aabb2.min().y) ? 1 : -1;
-}
-
-int box_z_compare(const void *a, const void *b) {
-	aabb aabb1, aabb2;
-	hitable * box1 = *((hitable **)a);
-	hitable * box2 = *((hitable **)b);
-
-	if (!box1->boundingBox(0, 0, aabb1) || !box2->boundingBox(0, 0, aabb2)) {
-		std::cerr << "no bounding box in bvh nodes";
-	}
-
-	return (aabb1.min().z > aabb2.min().z) ? 1 : -1;
-}
+int compBoxX(const void *a, const void *b);
+int compBoxY(const void *a, const void *b);
+int compBoxZ(const void *a, const void *b);
 
 class boundingHierarchy : public hitable {
 public:
@@ -54,13 +22,13 @@ public:
 		std::cout << "creating bounding volume hierarcy" << std::endl;
 		
 		
-		int axis = int(3 * rand(0, 1));
+		int axis = int(3 * rand(0.0, 1.0));
 		if (axis == 0) 
-			qsort(list, n, sizeof(hitable *), box_x_compare);
+			qsort(list, n, sizeof(hitable *), compBoxX);
 		else if (axis == 1) 
-			qsort(list, n, sizeof(hitable *), box_y_compare);
+			qsort(list, n, sizeof(hitable *), compBoxY);
 		else 
-			qsort(list, n, sizeof(hitable *), box_z_compare);
+			qsort(list, n, sizeof(hitable *), compBoxZ);
 			
 		
 		

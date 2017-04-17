@@ -48,6 +48,15 @@
     <ClCompile Include="aabb.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="scenes.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="perlin.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="boundingHierarchy.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ray.h">
@@ -135,6 +144,9 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="boundingHierarchy.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="scenes.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

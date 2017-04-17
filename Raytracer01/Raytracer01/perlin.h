@@ -5,11 +5,14 @@
 
 class perlin {
 public:
+
+	// function pointers ------------------
 	static vec3* ranvec;
 	static float* ranfloat;
 	static int*  perm_x;
 	static int*  perm_y;
 	static int*  perm_z;
+	// ----------------------------------
 
 	float noise(const vec3& p) const {
 
@@ -80,12 +83,9 @@ public:
 		permute(p, 256);
 		return p;
 	}
+
+
 };
 
-vec3 *perlin::ranvec = perlin_generate();
-float *perlin::ranfloat = perlin_generateF();
-int *perlin::perm_x = perlin_generate_perm();
-int *perlin::perm_y = perlin_generate_perm();
-int *perlin::perm_z = perlin_generate_perm();
 
 #endif
